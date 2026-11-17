@@ -203,25 +203,21 @@ details p{margin:12px 0 0;font-size:13px;color:var(--mute)}
 /* slider */
 .slider{position:relative;overflow:hidden;background:#141110}
 .track{display:flex;transition:transform .9s cubic-bezier(.65,0,.35,1)}
-.slide{flex:0 0 100%;display:grid;grid-template-columns:1fr 1fr;height:calc(100vh - 110px);min-height:560px;max-height:900px}
-.s-media{position:relative;overflow:hidden;background:#E9E3DC}
-.s-media img,.s-media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.s-txt{display:flex;flex-direction:column;justify-content:center;padding:48px clamp(28px,7vw,120px)}
-.s-txt h2{margin:16px 0 20px;font-size:clamp(38px,5vw,76px);line-height:.98;font-weight:800;text-transform:uppercase}
-.s-txt p{margin:0 0 32px;max-width:400px;font-size:15px;opacity:.85}
-.s-btn{align-self:flex-start;border:1px solid;padding:15px 26px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
-.s-btn:hover{opacity:.7}
+.slide{flex:0 0 100%;position:relative;height:min(calc(100vh - 110px),720px);min-height:460px}
+.slide img,.slide video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.s-btn{position:absolute;left:var(--pad);bottom:56px;background:#F7F3EE;color:#141110;padding:16px 28px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
+.s-btn:hover{background:#fff;color:#141110}
 .s-arrow{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border:0;background:rgba(247,243,238,.85);color:#141110;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .s-arrow.prev{left:16px}.s-arrow.next{right:16px}
-.dots{position:absolute;left:0;right:0;bottom:20px;display:flex;justify-content:center;gap:4px}
+.dots{position:absolute;right:var(--pad);bottom:62px;display:flex;gap:4px}
 .dots button{width:44px;height:24px;border:0;background:none;cursor:pointer;padding:0;position:relative}
-.dots button:after{content:'';position:absolute;left:8px;right:8px;top:11px;height:2px;background:rgba(247,243,238,.5)}
+.dots button:after{content:'';position:absolute;left:8px;right:8px;top:11px;height:2px;background:rgba(247,243,238,.55)}
 .dots button.on:after{background:#F7F3EE}
 @media (max-width:900px){
-  .slide{grid-template-columns:1fr;grid-template-rows:auto auto;height:auto;max-height:none;min-height:0}
-  .s-media{aspect-ratio:4/5}
-  .s-txt{padding:36px 24px 56px}
-  .s-arrow{top:40%}
+  .slide{height:auto;aspect-ratio:4/5;min-height:0}
+  .s-arrow{display:none}
+  .s-btn{bottom:24px}
+  .dots{bottom:28px}
 }
 @media (prefers-reduced-motion:reduce){.track{transition:none}}
 
@@ -261,44 +257,24 @@ details p{margin:12px 0 0;font-size:13px;color:var(--mute)}
   <section class="slider" id="slider" aria-roledescription="carousel" aria-label="Movement Matter">
     <div class="track" id="track">
       <div class="slide" aria-roledescription="slide" aria-label="1 of 3">
-        <div class="s-media"><img src="hero-fibres.jpg" alt="Natural fibres for real movement — woman in motion in a black top" style="object-position:center 55%"></div>
-        <div class="s-txt" style="background:#550210;color:#F5E5CC">
-          <span class="caps" style="color:#E2B9AE">Movement Matter</span>
-          <h2>Mostly trees.<br>Not oil.</h2>
-          <p>Activewear made from wood-based fibres, designed in Scandinavia.</p>
-          <a class="s-btn" href="#mission" style="border-color:#F5E5CC">Read our mission</a>
-        </div>
+        <video src="hero-coming.mp4" poster="hero-coming-poster.jpg" muted loop playsinline aria-label="Short film: view of a beach from an open van door" style="object-position:center 60%"></video>
+        <a class="s-btn" href="#join" data-join>Join the list</a>
       </div>
       <div class="slide" aria-roledescription="slide" aria-label="2 of 3">
-        <div class="s-media"><img src="hero-woman.jpg" alt="Grey-haired woman in a black one-piece" style="object-position:center 20%"></div>
-        <div class="s-txt" style="background:#F7F3EE;color:#141110">
-          <span class="caps" style="color:#6F6762">Drop 01 · Black</span>
-          <h2>Every age.<br>Every body.</h2>
-          <p>Pilates at seven, coffee at nine, a long walk after. Nothing to change out of.</p>
-          <a class="s-btn" href="#shop" style="border-color:#141110">Shop Drop 01</a>
-        </div>
+        <img src="hero-fibres.jpg" alt="Natural fibres for real movement — woman in motion in a black top" style="object-position:center 56%">
+        <a class="s-btn" href="#mission">Read our mission</a>
       </div>
       <div class="slide" aria-roledescription="slide" aria-label="3 of 3">
-        <div class="s-media"><video src="hero-coming.mp4" poster="hero-coming-poster.jpg" muted loop playsinline aria-label="Short film: view of a beach from an open van door"></video></div>
-        <div class="s-txt" style="background:#141110;color:#F7F3EE">
-          <span class="caps" style="color:#A69C95">Drop 02</span>
-          <h2>Are you<br>coming?</h2>
-          <p>Drop 01 sold out before it opened. Join the list and shop the next one first.</p>
-          <a class="s-btn" href="#join" data-join style="border-color:#F7F3EE">Join the list</a>
-        </div>
+        <img src="hero-woman.jpg" alt="Grey-haired woman in a black one-piece" style="object-position:center 18%">
+        <a class="s-btn" href="#shop">Shop Drop 01</a>
       </div>
     </div>
     <button class="s-arrow prev" id="sPrev" aria-label="Previous slide"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
     <button class="s-arrow next" id="sNext" aria-label="Next slide"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
     <div class="dots" id="dots"><button aria-label="Slide 1"></button><button aria-label="Slide 2"></button><button aria-label="Slide 3"></button></div>
   </section>
-  <div class="intro">
-    <p class="caps" style="margin:0;color:var(--mute)">Drop 01 · Five pieces in black</p>
-    <h1>Sold out.</h1>
-    <p>Our first drop is gone. Join the list and shop Drop 02 a full day before anyone else.</p>
-    <div data-form="home"></div>
-  </div>
-
+  
+  <div style="height:56px"></div>
   <div class="sec-head"><span class="caps">Drop 01</span><a href="#shop" class="caps u">View all</a></div>
   <div class="grid" data-grid></div>
 
