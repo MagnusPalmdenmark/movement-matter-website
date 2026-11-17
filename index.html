@@ -256,26 +256,22 @@ details p{margin:12px 0 0;font-size:13px;color:var(--mute)}
 <section class="view" id="view-home">
   <section class="slider" id="slider" aria-roledescription="carousel" aria-label="Movement Matter">
     <div class="track" id="track">
-      <div class="slide" aria-roledescription="slide" aria-label="1 of 4">
+      <div class="slide" aria-roledescription="slide" aria-label="1 of 3">
         <video src="hero-coming.mp4" poster="hero-coming-poster.jpg" muted loop playsinline aria-label="Short film: view of a beach from an open van door" style="object-position:center 60%"></video>
         <a class="s-btn" href="#join" data-join>Join the list</a>
       </div>
-      <div class="slide" aria-roledescription="slide" aria-label="2 of 4">
+      <div class="slide" aria-roledescription="slide" aria-label="2 of 3">
         <img src="hero-fibres.jpg" alt="Natural fibres for real movement — woman in motion in a black top" style="object-position:center 56%">
         <a class="s-btn" href="#mission">Read our mission</a>
       </div>
-      <div class="slide" aria-roledescription="slide" aria-label="3 of 4">
-        <img src="hero-market.jpg" alt="Natural fibres for real movement — woman in a black sports bra and shorts shopping for vegetables" style="object-position:center 50%">
-        <a class="s-btn" href="#shop">Shop Drop 01</a>
-      </div>
-      <div class="slide" aria-roledescription="slide" aria-label="4 of 4">
+      <div class="slide" aria-roledescription="slide" aria-label="3 of 3">
         <img src="hero-woman.jpg" alt="Grey-haired woman in a black one-piece" style="object-position:center 18%">
         <a class="s-btn" href="#shop">Shop Drop 01</a>
       </div>
     </div>
     <button class="s-arrow prev" id="sPrev" aria-label="Previous slide"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
     <button class="s-arrow next" id="sNext" aria-label="Next slide"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
-    <div class="dots" id="dots"><button aria-label="Slide 1"></button><button aria-label="Slide 2"></button><button aria-label="Slide 3"></button><button aria-label="Slide 4"></button></div>
+    <div class="dots" id="dots"><button aria-label="Slide 1"></button><button aria-label="Slide 2"></button><button aria-label="Slide 3"></button></div>
   </section>
   
   <div style="height:56px"></div>
@@ -283,7 +279,7 @@ details p{margin:12px 0 0;font-size:13px;color:var(--mute)}
   <div class="grid" data-grid></div>
 
   <div class="story">
-    <div class="media"><img src="m-you.jpg" alt="Grey-haired woman in a black one-piece" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></div>
+    <div class="media"><img src="hero-market.jpg" alt="Natural fibres for real movement — woman in a black sports bra and shorts shopping for vegetables" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></div>
     <div class="txt">
       <span class="caps" style="color:var(--mute)">Our mission</span>
       <h2>Mostly trees.<br>Not oil.</h2>
@@ -392,8 +388,8 @@ details p{margin:12px 0 0;font-size:13px;color:var(--mute)}
     </div>
     <div class="trio">
       <figure><img src="m-move.jpg" alt="Woman in black sitting on stone steps"><figcaption><strong>Material matters.</strong> What sits on your skin for hours should be made of something better.</figcaption></figure>
-      <figure><img src="m-you.jpg" alt="Grey-haired woman in a black one-piece"><figcaption><strong>Movement matters.</strong> Pilates at seven, coffee at nine, a long walk after. Nothing to change out of.</figcaption></figure>
-      <figure><img src="strap-close.jpg" alt="Woman in the black No. 01 Strap Top"><figcaption><strong>You matter.</strong> Real women, every age, every body. Strength, not perfection.</figcaption></figure>
+      <figure><img src="m-cap.jpg" alt="Woman in a black sports bra, cap and headscarf"><figcaption><strong>Movement matters.</strong> Pilates at seven, coffee at nine, a long walk after. Nothing to change out of.</figcaption></figure>
+      <figure><img src="m-strap.jpg" alt="Close-up of a black strap on a shoulder"><figcaption><strong>You matter.</strong> Real women, every age, every body. Strength, not perfection.</figcaption></figure>
     </div>
   </div>
 
@@ -443,7 +439,7 @@ details p{margin:12px 0 0;font-size:13px;color:var(--mute)}
 
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
   <div class="dialog">
-    <div class="ph"><img src="strap-close.jpg" alt=""></div>
+    <div class="ph"><img src="pop.jpg" alt=""></div>
     <div class="body">
       <button class="x" id="mClose" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
       <span class="caps" style="color:var(--mute)">Drop 01 sold out</span>
@@ -462,8 +458,7 @@ details p{margin:12px 0 0;font-size:13px;color:var(--mute)}
     {id:'no-01', name:'No. 01', type:'Strap Top', colour:'Black', colours:BLACK, img:'strap-close.jpg', pos:'center 30%', hover:'strap-full.jpg', hoverPos:'center 30%',
      price:'399 DKK',
      gallery:[['strap-close.jpg','No. 01 Strap Top in black, close-up','center 30%'],
-              ['strap-full.jpg','No. 01 Strap Top in black, worn with No. 02 Wide-Leg Pant','center 30%'],
-              ['cami-black-front.jpg','No. 01 Strap Top in black, full length','center 20%']],
+              ['strap-full.jpg','No. 01 Strap Top in black, worn with No. 02 Wide-Leg Pant','center 30%']],
      desc:'A close-fitting strap top with a soft built-in shelf bra and fine adjustable straps — enough support for Pilates and yoga, simple enough to wear all day.',
      points:['Built-in shelf bra for light, everyday support','Openings for removable pads (pads sold separately)','Fine adjustable straps','Scoop neck, body-hugging fit, hip length','Four-way stretch'],
      fit:'True to size, with a close, second-skin fit. Between sizes? Size down for more support. Model is [HEIGHT] and wears size [SIZE].'},
