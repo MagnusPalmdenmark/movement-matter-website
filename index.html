@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Movement Matter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#141110; --mute:#6F6762; --line:#E3DCD3; --paper:#F7F3EE; --white:#FFFFFF;
+  --red:#760210; --deep:#550210; --cream:#F5E5CC;
+  --pad:clamp(20px,3.6vw,48px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'Montserrat',system-ui,sans-serif;font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img,video{display:block}
+button,input,select{font:inherit;color:inherit}
+.caps{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase}
+.wrap{padding-left:var(--pad);padding-right:var(--pad)}
+.u{border-bottom:1px solid currentColor;padding-bottom:2px}
+
+/* logo */
+.logo{display:inline-flex;flex-direction:column;gap:2px;border:2px solid currentColor;padding:2px;color:var(--red)}
+.logo span{display:block;border:1.5px solid currentColor;text-align:center}
+.logo .l1{padding:2px 0 2px .5em;font-size:9px;font-weight:600;letter-spacing:.5em;line-height:1.4}
+.logo .l2{padding:0 9px;font-size:22px;font-weight:800;letter-spacing:.02em;line-height:1.2}
+
+/* bar + header */
+.bar{background:var(--ink);color:var(--paper);text-align:center;padding:10px 16px;font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase}
+header{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
+.head{height:76px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px}
+.head nav{display:flex;gap:28px}
+.head .r{display:flex;gap:28px;justify-content:flex-end}
+.head a:hover{opacity:.6}
+.menu-btn{display:none;background:none;border:0;padding:10px;margin-left:-10px;cursor:pointer}
+.mnav{display:none;border-top:1px solid var(--line);padding:8px var(--pad) 16px}
+.mnav a{display:block;padding:12px 0}
+.mnav.open{display:block}
+
+.view{display:none}
+.view.active{display:block}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.hero .ph{position:relative;aspect-ratio:3/4;max-height:calc(100vh - 110px);width:100%;overflow:hidden;background:#E9E3DC}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.intro{text-align:center;padding:72px var(--pad) 88px}
+.intro h1{margin:14px 0 14px;font-size:clamp(34px,4.6vw,64px);line-height:1;font-weight:800;letter-spacing:-.01em;text-transform:uppercase}
+.intro p{margin:0 auto 32px;max-width:440px;color:var(--mute);font-size:15px}
+
+/* list form */
+.lform{display:flex;max-width:440px;margin:0 auto;border:1px solid var(--ink)}
+.lform input{flex:1 1 auto;min-width:0;border:0;background:transparent;padding:15px 16px;font-size:14px;outline:none}
+.lform input::placeholder{color:#9B918A}
+.lform button{border:0;background:var(--ink);color:var(--paper);padding:0 24px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;cursor:pointer}
+.lform button:hover{background:#000}
+.fine{margin:12px 0 0;font-size:11px;color:var(--mute)}
+.ok{font-size:14px;font-weight:600;margin:0}
+.err{font-size:12px;color:var(--red);margin:8px 0 0;min-height:18px}
+.dark .lform{border-color:var(--cream)}
+.dark .lform button{background:var(--cream);color:var(--deep)}
+.dark .lform input{color:var(--cream)}
+.dark .lform input::placeholder{color:#C9A9A0}
+.dark .fine{color:#D9BDB2}
+.dark .err{color:#FFD3C9}
+
+/* grid */
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:0 var(--pad);margin-bottom:20px}
+.grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+@media (max-width:1200px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.tile{display:block}
+.tile .im{position:relative;aspect-ratio:3/4;overflow:hidden;background:#E9E3DC}
+.tile .im img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .45s ease}
+.tile .im img.h{opacity:0}
+.tile:hover .im img.h{opacity:1}
+.tile .meta{display:flex;justify-content:space-between;gap:12px;padding:14px var(--pad) 0 14px}
+.tile .n{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.tile .t{font-size:13px;color:var(--mute)}
+.tile .p{font-size:13px;text-align:right;white-space:nowrap}
+.tile .so{display:block;font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
+
+/* story */
+.story{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:0;margin-top:120px;background:var(--white)}
+.story .media{position:relative;aspect-ratio:4/5;overflow:hidden;background:#E9E3DC}
+.story video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.story .txt{padding:64px clamp(24px,7vw,120px)}
+.story h2{margin:16px 0 24px;font-size:clamp(28px,3.2vw,44px);line-height:1.05;font-weight:800;text-transform:uppercase}
+.story p{margin:0 0 16px;color:var(--mute);font-size:15px;max-width:440px}
+.pillars{list-style:none;margin:32px 0 32px;padding:0;border-top:1px solid var(--line)}
+.pillars li{display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.pillars li span:last-child{font-weight:500;letter-spacing:0;text-transform:none;color:var(--mute);font-size:13px;text-align:right}
+
+/* join */
+.join{background:var(--deep);color:var(--cream);text-align:center;padding:112px var(--pad)}
+.join h2{margin:14px 0 14px;font-size:clamp(30px,4vw,56px);line-height:1;font-weight:800;text-transform:uppercase}
+.join p.lead{margin:0 auto 32px;max-width:460px;color:#E8CFC4;font-size:15px}
+
+/* footer */
+footer{padding:64px var(--pad) 32px;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:start}
+footer .cols{display:flex;gap:56px}
+footer .cols div{display:flex;flex-direction:column;gap:8px;font-size:13px}
+footer .cols a:hover{opacity:.6}
+.legal{grid-column:1/-1;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid var(--line);padding-top:16px;color:var(--mute)}
+
+/* product */
+.pdp{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(320px,1fr);gap:0;align-items:start}
+.gal{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.gal .g{position:relative;aspect-ratio:3/4;overflow:hidden;background:#E9E3DC}
+.gal img,.gal video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.info{position:sticky;top:96px;padding:40px clamp(24px,4vw,64px) 64px}
+.crumb{color:var(--mute);margin:0 0 32px}
+.crumb a:hover{color:var(--ink)}
+.info h1{margin:0;font-size:34px;font-weight:800;line-height:1.05;text-transform:uppercase}
+.info .type{margin:8px 0 16px;font-size:13px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
+.row{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0;margin:0 0 24px}
+.info .desc{margin:0 0 20px;font-size:15px;line-height:1.65}
+.pts{list-style:none;margin:0 0 28px;padding:0;font-size:13px;color:var(--mute)}
+.pts li{padding:3px 0}
+.pts li:before{content:'— ';color:var(--ink)}
+.lbl{display:block;margin:0 0 10px}
+.sizes{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:24px}
+.sizes button{height:44px;border:1px solid var(--line);background:transparent;color:#A69C95;font-size:12px;font-weight:600;text-decoration:line-through;cursor:not-allowed}
+.soldbtn{width:100%;height:52px;border:1px solid var(--ink);background:transparent;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--mute);cursor:not-allowed;margin-bottom:28px}
+.notify{border:1px solid var(--line);padding:22px;background:var(--white);margin-bottom:28px}
+.notify .lform{margin:0;max-width:none}
+.notify select{width:100%;border:1px solid var(--line);background:var(--paper);padding:12px 14px;margin:0 0 10px;font-size:13px}
+details{border-top:1px solid var(--line);padding:16px 0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary:after{content:'+';float:right;font-weight:500}
+details[open] summary:after{content:'–'}
+details p{margin:12px 0 0;font-size:13px;color:var(--mute)}
+.more{padding:96px 0 0}
+
+/* about */
+.about{max-width:760px;margin:0 auto;padding:96px var(--pad) 120px;text-align:center}
+.about h1{margin:14px 0 32px;font-size:clamp(34px,4.6vw,60px);line-height:1;font-weight:800;text-transform:uppercase}
+.about p{font-size:17px;line-height:1.75;color:#3E3834;margin:0 0 22px;text-align:left}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(20,17,16,.55)}
+.modal.open{display:flex}
+.dialog{width:min(860px,100%);background:var(--paper);display:grid;grid-template-columns:1fr 1fr;position:relative;max-height:calc(100vh - 40px);overflow:auto}
+.dialog .ph{position:relative;min-height:520px}
+.dialog .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%}
+.dialog .body{padding:56px 44px 40px;display:flex;flex-direction:column;justify-content:center;text-align:center}
+.dialog h2{margin:12px 0 12px;font-size:32px;line-height:1;font-weight:800;text-transform:uppercase}
+.dialog p.lead{margin:0 0 28px;color:var(--mute)}
+.x{position:absolute;top:6px;right:6px;width:44px;height:44px;background:none;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.skip{margin-top:20px;background:none;border:0;color:var(--mute);font-size:11px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;text-decoration:underline}
+
+
+/* mission */
+.m-hero{display:grid;grid-template-columns:1fr 1fr;align-items:center;background:var(--white)}
+.m-media{position:relative;aspect-ratio:4/5;overflow:hidden;background:#E9E3DC}
+.m-media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.m-intro{padding:64px clamp(24px,7vw,120px)}
+.m-intro h1{margin:16px 0 24px;font-size:clamp(34px,4.4vw,60px);line-height:1;font-weight:800;text-transform:uppercase}
+.m-intro p{max-width:460px;color:var(--mute);font-size:15px;margin:0 0 16px}
+.m-intro p.lead{color:var(--ink);font-size:18px;line-height:1.55}
+.m-sec{padding:112px var(--pad)}
+.m-head{max-width:760px;margin-bottom:48px}
+.m-head h2,.m-txt h2{margin:14px 0 0;font-size:clamp(28px,3.2vw,44px);line-height:1.05;font-weight:800;text-transform:uppercase}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--ink)}
+.fact{padding:32px 32px 36px 0;border-bottom:1px solid var(--line)}
+.fact:not(:nth-child(3n+1)){padding-left:32px;border-left:1px solid var(--line)}
+.fact .num{font-size:clamp(34px,3.6vw,52px);font-weight:800;line-height:1;letter-spacing:-.01em}
+.fact p{margin:14px 0 18px;font-size:15px;max-width:340px}
+.src{display:block;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#958B84}
+.m-split{display:grid;grid-template-columns:1fr 1fr;align-items:center;background:var(--white)}
+.m-split.rev .m-img{order:2}
+.m-img{position:relative;aspect-ratio:4/5;overflow:hidden}
+.m-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.m-txt{padding:64px clamp(24px,7vw,120px)}
+.m-txt p{max-width:460px;color:var(--mute);font-size:15px;margin:20px 0 0}
+.m-txt .src{margin-top:24px}
+.m-txt .pillars{margin:28px 0 8px;max-width:460px}
+.label-box{border:1px solid var(--ink);padding:clamp(28px,4vw,56px);display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center}
+.names{display:flex;flex-wrap:wrap;gap:10px}
+.names span{border:1px solid var(--ink);padding:10px 16px;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.label-box p{margin:0;font-size:16px;line-height:1.6}
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+.trio figure{margin:0}
+.trio img{width:100%;aspect-ratio:3/4;object-fit:cover}
+.trio figcaption{padding:16px 14px 0 0;font-size:14px;color:var(--mute);max-width:360px}
+.trio figcaption strong{display:block;color:var(--ink);font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px}
+.films{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+.films video{width:100%;aspect-ratio:9/16;object-fit:cover;background:#E9E3DC}
+@media (max-width:900px){
+  .m-hero,.m-split{grid-template-columns:1fr}
+  .m-split.rev .m-img{order:0}
+  .facts{grid-template-columns:1fr}
+  .fact{padding:28px 0 !important;border-left:0 !important}
+  .label-box{grid-template-columns:1fr}
+  .trio{grid-template-columns:1fr}
+  .films{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+
+@media (max-width:900px){
+  .head{grid-template-columns:auto 1fr auto}
+  .head nav,.head .r .hm{display:none}
+  .menu-btn{display:block}
+  .head .logo{justify-self:center}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .story{grid-template-columns:1fr}
+  .pdp{grid-template-columns:1fr}
+  .info{position:static}
+  .dialog{grid-template-columns:1fr}
+  .dialog .ph{display:none}
+  footer{grid-template-columns:1fr}
+  footer .cols{flex-wrap:wrap;gap:32px}
+}
+</style>
+</head>
+<body>
+
+<div class="bar">Drop 01 sold out — join the list for Drop 02</div>
+
+<header>
+  <div class="wrap head">
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18"/></svg></button>
+    <nav class="caps" aria-label="Main"><a href="#shop">Shop</a><a href="#mission">Mission</a></nav>
+    <a href="#home" class="logo" aria-label="Movement Matter — home"><span class="l1">MOVEMENT</span><span class="l2">MATTER</span></a>
+    <div class="r caps"><a href="#join" class="hm" data-join>Join the list</a><a href="#" id="bag">Bag (0)</a></div>
+  </div>
+  <div class="mnav caps" id="mnav"><a href="#shop">Shop</a><a href="#mission">Mission</a><a href="#join" data-join>Join the list</a></div>
+</header>
+
+<main>
+<!-- HOME -->
+<section class="view" id="view-home">
+  <div class="hero">
+    <a class="ph" href="#no-01"><img src="strap-full.jpg" alt="No. 01 Strap Top and No. 02 Wide-Leg Pant in black" style="object-position:center 30%"></a>
+    <a class="ph" href="#no-02"><img src="pant-stride.jpg" alt="No. 02 Wide-Leg Pant in black, walking" style="object-position:center 40%"></a>
+  </div>
+  <div class="intro">
+    <p class="caps" style="margin:0;color:var(--mute)">Drop 01 · Five pieces in black</p>
+    <h1>Sold out.</h1>
+    <p>Our first drop is gone. Join the list and shop Drop 02 a full day before anyone else.</p>
+    <div data-form="home"></div>
+  </div>
+
+  <div class="sec-head"><span class="caps">Drop 01</span><a href="#shop" class="caps u">View all</a></div>
+  <div class="grid" data-grid></div>
+
+  <div class="story">
+    <div class="media"><img src="m-you.jpg" alt="Grey-haired woman in a black one-piece" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></div>
+    <div class="txt">
+      <span class="caps" style="color:var(--mute)">Our mission</span>
+      <h2>Mostly trees.<br>Not oil.</h2>
+      <p>Most activewear is plastic: polyester, nylon, elastane. Worn tight against the skin, for hours, while you sweat. We make ours mostly from wood.</p>
+      <ul class="pillars">
+        <li><span>Fibre</span><span>94% wood-based viscose</span></li>
+        <li><span>Stretch</span><span>6% elastane — plastic, and we say so</span></li>
+        <li><span>Colour</span><span>Black. Only black.</span></li>
+      </ul>
+      <a href="#mission" class="caps u">Read our mission</a>
+    </div>
+  </div>
+
+  <section class="join" id="join-home">
+    <span class="caps" style="color:#D9BDB2">The list</span>
+    <h2>Be first for Drop 02.</h2>
+    <p class="lead">24 hours’ early access to every drop, and the first look at new pieces. No spam.</p>
+    <div class="dark" data-form="join"></div>
+  </section>
+</section>
+
+<!-- SHOP -->
+<section class="view" id="view-shop">
+  <div class="intro" style="padding:56px var(--pad) 40px">
+    <h1 style="font-size:clamp(28px,3.4vw,44px)">Drop 01</h1>
+    <p style="margin-bottom:0">Five pieces in black. Sold out — join the list for Drop 02.</p>
+  </div>
+  <div class="grid" data-grid></div>
+  <section class="join" style="margin-top:96px">
+    <h2>Be first for Drop 02.</h2>
+    <p class="lead">24 hours’ early access to every drop. No spam.</p>
+    <div class="dark" data-form="shop"></div>
+  </section>
+</section>
+
+<!-- MISSION -->
+<section class="view" id="view-mission">
+  <div class="m-hero">
+    <div class="m-media"><img src="m-wall.jpg" alt="Woman in a black one-piece leaning against a sunlit wall" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></div>
+    <div class="m-intro">
+      <span class="caps" style="color:var(--mute)">Our mission</span>
+      <h1>Made of what matters.</h1>
+      <p class="lead">Most activewear is plastic. We wear it tight against the skin, for hours, while we sweat — and almost nobody reads the label.</p>
+      <p>Movement Matter makes activewear mostly from trees, not oil. Fewer pieces, in black, released in small drops — and honest about what’s in them.</p>
+    </div>
+  </div>
+
+  <div class="m-sec">
+    <div class="m-head">
+      <span class="caps" style="color:var(--mute)">01 — The problem</span>
+      <h2>Most activewear is plastic.</h2>
+    </div>
+    <div class="facts">
+      <div class="fact"><div class="num">139 million</div><p>tonnes of fibre were produced worldwide in 2025 — a record.</p><span class="src">Textile Exchange, Materials Market Report 2026</span></div>
+      <div class="fact"><div class="num">59%</div><p>of all fibre made in 2024 was polyester. Polyester is plastic.</p><span class="src">Textile Exchange, Materials Market Report 2025</span></div>
+      <div class="fact"><div class="num">88%</div><p>of that polyester was brand new, made from fossil fuels. Only about 12% was recycled.</p><span class="src">Textile Exchange, Materials Market Report 2025</span></div>
+      <div class="fact"><div class="num">496,000</div><p>plastic fibres can be released by one 6 kg wash of polyester clothing.</p><span class="src">Napper &amp; Thompson, University of Plymouth, 2016</span></div>
+      <div class="fact"><div class="num">35%</div><p>of the primary microplastics reaching the oceans come from washing synthetic clothes.</p><span class="src">IUCN, Primary Microplastics in the Oceans, 2017</span></div>
+      <div class="fact"><div class="num">Up to 40×</div><p>California’s safe limit for BPA — what a US watchdog found when it tested sports bras, leggings and shirts from major brands. The brands dispute the results.</p><span class="src">Center for Environmental Health, 2023</span></div>
+    </div>
+  </div>
+
+  <div class="m-split">
+    <div class="m-img"><img src="m-skin.jpg" alt="Close-up of a woman’s shoulder and a black strap"></div>
+    <div class="m-txt">
+      <span class="caps" style="color:var(--mute)">02 — Recycled is still plastic</span>
+      <h2>A bottle can become a bottle again. A legging can’t.</h2>
+      <p>Recycled polyester sounds like the answer. But it’s still polyester: it still sheds plastic fibres in the wash, and almost all of it is made from bottles, not old clothes.</p>
+      <p>Less than 1% of the world’s fibre comes from recycled textiles. Blends with stretch fibres are especially hard to recycle again. Once a bottle is turned into fibre, that loop is broken.</p>
+      <span class="src">Textile Exchange, Materials Market Report 2025</span>
+    </div>
+  </div>
+
+  <div class="m-split rev">
+    <div class="m-img"><img src="m-fabric.jpg" alt="Close-up of black fabric in warm light"></div>
+    <div class="m-txt">
+      <span class="caps" style="color:var(--mute)">03 — What we make instead</span>
+      <h2>94% wood. 6% stretch.</h2>
+      <p>Our fabric is 94% wood-based viscose and 6% elastane. The viscose comes from trees. The elastane gives the stretch — it is plastic, and we say so.</p>
+      <ul class="pillars">
+        <li><span>Fibre</span><span>LENZING™ ECOVERO™ viscose</span></li>
+        <li><span>Footprint</span><span>At least 50% less CO₂ and water than generic viscose</span></li>
+        <li><span>Wood</span><span>FSC® or PEFC certified sources</span></li>
+        <li><span>Label</span><span>EU Ecolabel, the EU’s official environmental label</span></li>
+      </ul>
+      <p style="font-size:13px">We test before we promise. Stretch recovery, pilling and breathability are measured on our own fabric — results published here when they’re in.</p>
+      <span class="src">Fibre data: Lenzing AG</span>
+    </div>
+  </div>
+
+  <div class="m-sec">
+    <div class="m-head">
+      <span class="caps" style="color:var(--mute)">04 — Read the label</span>
+      <h2>Plastic has many names.</h2>
+    </div>
+    <div class="label-box">
+      <div class="names"><span>Polyester</span><span>Nylon</span><span>Polyamide</span><span>Elastane</span><span>Spandex</span><span>Lycra</span><span>Acrylic</span></div>
+      <p>The biggest number on the label is what you’re mostly wearing. Look for fibres made from plants and wood instead: cotton, linen, hemp, viscose, modal, lyocell.</p>
+    </div>
+  </div>
+
+  <div class="m-sec">
+    <div class="m-head">
+      <span class="caps" style="color:var(--mute)">05 — Who we make it for</span>
+      <h2>Material matters. Movement matters. You matter.</h2>
+    </div>
+    <div class="trio">
+      <figure><img src="m-move.jpg" alt="Woman in black sitting on stone steps"><figcaption><strong>Material matters.</strong> What sits on your skin for hours should be made of something better.</figcaption></figure>
+      <figure><img src="m-you.jpg" alt="Grey-haired woman in a black one-piece"><figcaption><strong>Movement matters.</strong> Pilates at seven, coffee at nine, a long walk after. Nothing to change out of.</figcaption></figure>
+      <figure><img src="strap-close.jpg" alt="Woman in the black No. 01 Strap Top"><figcaption><strong>You matter.</strong> Real women, every age, every body. Strength, not perfection.</figcaption></figure>
+    </div>
+  </div>
+
+  <section class="join">
+    <h2>Be first for Drop 02.</h2>
+    <p class="lead">24 hours’ early access to every drop, and the occasional letter on fabric and movement. No spam.</p>
+    <div class="dark" data-form="mission"></div>
+  </section>
+</section>
+
+<!-- PRODUCT -->
+<section class="view" id="view-product">
+  <div class="pdp">
+    <div class="gal" id="gal"></div>
+    <div class="info">
+      <p class="crumb caps"><a href="#shop">Shop</a> / <span id="crumb"></span></p>
+      <h1 id="pName"></h1>
+      <p class="type" id="pType"></p>
+      <div class="row"><span id="pPrice"></span><span class="caps" style="color:var(--mute)">Black · Sold out</span></div>
+      <p class="desc" id="pDesc"></p>
+      <ul class="pts" id="pPts"></ul>
+      <span class="caps lbl">Size</span>
+      <div class="sizes"><button disabled>XS</button><button disabled>S</button><button disabled>M</button><button disabled>L</button><button disabled>XL</button></div>
+      <button class="soldbtn" disabled>Sold out</button>
+      <div class="notify" id="notify"></div>
+      <details open><summary class="caps">Fit</summary><p id="pFit"></p></details>
+      <details><summary class="caps">Material</summary><p id="pMat"></p></details>
+      <details><summary class="caps">Care</summary><p>Wash cold, inside out. Dry flat. No tumble dryer.</p></details>
+    </div>
+  </div>
+  <div class="more">
+    <div class="sec-head"><span class="caps">Also in Drop 01</span></div>
+    <div class="grid" id="more"></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <a href="#home" class="logo" aria-label="Movement Matter — home"><span class="l1">MOVEMENT</span><span class="l2">MATTER</span></a>
+  <div class="cols">
+    <div><span class="caps" style="color:var(--mute);margin-bottom:4px">Shop</span><a href="#shop">Drop 01</a><a href="#join" data-join>Join the list</a></div>
+    <div><span class="caps" style="color:var(--mute);margin-bottom:4px">Info</span><a href="#mission">Mission</a><a href="#home">Shipping &amp; returns</a><a href="#home">Contact</a></div>
+    <div><span class="caps" style="color:var(--mute);margin-bottom:4px">Follow</span><a href="#home">Instagram</a><a href="#home">TikTok</a></div>
+  </div>
+  <div class="legal caps" style="font-size:10px"><span>© 2026 Movement Matter · [Company &amp; CVR]</span><span>Denmark · DKK</span></div>
+</footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="dialog">
+    <div class="ph"><img src="strap-close.jpg" alt=""></div>
+    <div class="body">
+      <button class="x" id="mClose" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+      <span class="caps" style="color:var(--mute)">Drop 01 sold out</span>
+      <h2 id="mTitle">Be first for Drop 02.</h2>
+      <p class="lead">Join the list for 24 hours’ early access.</p>
+      <div data-form="modal"></div>
+      <button class="skip" id="mSkip">No thanks</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var BLACK = [{n:'Black',h:'#111111'}];
+  var PRODUCTS = [
+    {id:'no-01', name:'No. 01', type:'Strap Top', colour:'Black', colours:BLACK, img:'strap-close.jpg', pos:'center 30%', hover:'strap-full.jpg', hoverPos:'center 30%',
+     price:'399 DKK',
+     gallery:[['strap-close.jpg','No. 01 Strap Top in black, close-up','center 30%'],
+              ['strap-full.jpg','No. 01 Strap Top in black, worn with No. 02 Wide-Leg Pant','center 30%'],
+              ['cami-black-front.jpg','No. 01 Strap Top in black, full length','center 20%']],
+     desc:'A close-fitting strap top with a soft built-in shelf bra and fine adjustable straps — enough support for Pilates and yoga, simple enough to wear all day.',
+     points:['Built-in shelf bra for light, everyday support','Openings for removable pads (pads sold separately)','Fine adjustable straps','Scoop neck, body-hugging fit, hip length','Four-way stretch'],
+     fit:'True to size, with a close, second-skin fit. Between sizes? Size down for more support. Model is [HEIGHT] and wears size [SIZE].'},
+    {id:'no-02', name:'No. 02', type:'Wide-Leg Pant', colour:'Black', colours:BLACK, img:'pant-stride.jpg', pos:'center 40%', hover:'pant-stand.jpg', hoverPos:'center 40%',
+     price:'599 DKK',
+     gallery:[['pant-stride.jpg','No. 02 Wide-Leg Pant in black, walking, side view','center 40%'],
+              ['pant-stand.jpg','No. 02 Wide-Leg Pant in black, full length, front view','center 40%'],
+              ['pant-sit.jpg','No. 02 Wide-Leg Pant in black, worn seated','center 40%']],
+     desc:'A high-rise, wide-leg pant that moves like a legging and looks like a trouser. Wear it to class, then straight on to lunch.',
+     points:['High rise with a wide, double-layer waistband — wear it up or fold it down','Relaxed wide leg, full length','No front seam; shaped back seams','Hidden pocket at the back waist','Four-way stretch'],
+     fit:'True to size. Between sizes? Size down for a closer fit. Inseam: [INSEAM] cm. Model is [HEIGHT] and wears size [SIZE].'},
+    {id:'no-03', name:'No. 03', type:'High Short', colour:'Black', colours:BLACK, img:'short-walk.jpg', pos:'center 45%', hover:'short-front.jpg', hoverPos:'center 45%',
+     gallery:[['short-walk.jpg','No. 03 High Short in black, walking','center 45%'],
+              ['short-front.jpg','No. 03 High Short in black, front view showing the side pocket','center 45%'],
+              ['short-sit.jpg','No. 03 High Short in black, worn seated','center 40%']],
+     price:'429 DKK',
+     desc:'A high-rise, mid-thigh short with real pockets, for hot rooms, warm days and long walks.',
+     points:['High rise with a wide, double-layer waistband','Mid-thigh length','Two deep side pockets and a hidden pocket at the back','Shaped back seams; no front seam','Firm, four-way stretch'],
+     fit:'True to size. Between sizes? Size down for a firmer feel. Inseam: [INSEAM] cm. Model is [HEIGHT] and wears size [SIZE].'},
+    {id:'no-04', name:'No. 04', type:'Square Top', colour:'Black', colours:BLACK, img:'top-sit.jpg', pos:'center 35%', hover:'top-back.jpg', hoverPos:'center 30%',
+     gallery:[['top-sit.jpg','No. 04 Square Top in black, close-up','center 35%'],
+              ['top-front.jpg','No. 04 Square Top in black, worn with No. 03 High Short','center 35%'],
+              ['top-back.jpg','No. 04 Square Top in black, back view showing the open back','center 30%'],
+              ['top-walk.jpg','No. 04 Square Top in black, walking','center 35%']],
+     price:'349 DKK',
+     desc:'A cropped top with a square neck and an open, scooped back, made to be worn on its own or under an open shirt.',
+     points:['Square neck, open scooped back','Wide, comfortable straps','Support band under the bust','Double-layered, with openings for removable pads','Cropped length, four-way stretch'],
+     fit:'True to size. Model is [HEIGHT], cup [CUP], and wears size [SIZE].'},
+    {id:'no-05', name:'No. 05', type:'Oversized Tee', colour:'Black', colours:BLACK, img:'tee-model.jpg', pos:'center 30%', hover:'tee-man.jpg', hoverPos:'center 30%',
+     price:'449 DKK',
+     gallery:[['tee-model.jpg','No. 05 Oversized Tee in black, worn with No. 03 High Short','center 30%'],
+              ['tee-man.jpg','No. 05 Oversized Tee in black, back view with stacked MATTER print','center 30%'],
+              ['tee-front.jpg','No. 05 Oversized Tee, front, with embroidered MATTER at the chest','center center','contain'],
+              ['tee-back.jpg','No. 05 Oversized Tee, back, with stacked MATTER print','center center','contain']],
+     desc:'A heavy, boxy tee cut wide through the body and sleeves. MATTER embroidered small at the chest, and repeated five times down the back. Over the short after class, over everything else the rest of the day.',
+     points:['Oversized, boxy fit with dropped shoulders','Wide short sleeves','Ribbed crew neck','Tonal-cream embroidery at the chest','Stacked MATTER print across the back'],
+     fit:'Oversized by design. Size down for a closer fit. Model is [HEIGHT] and wears size [SIZE].',
+     material:'[FABRIC — e.g. organic cotton, weight in gsm].'}
+  ];
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  var joined = false;
+  try { joined = localStorage.getItem('mm_joined') === '1'; } catch(e){}
+
+  function formHTML(){
+    if (joined) return '<p class="ok">You’re on the list. We’ll write before Drop 02 opens.</p>';
+    return '<form class="lf" novalidate><div class="lform"><input type="email" placeholder="Email address" aria-label="Email address" autocomplete="email"><button type="submit">Join</button></div>'+
+      '<p class="err" aria-live="polite"></p><p class="fine" style="margin-top:0">By joining you agree to receive emails. Unsubscribe any time.</p></form>';
+  }
+  function renderForms(){ document.querySelectorAll('[data-form]').forEach(function(el){ el.innerHTML = formHTML(); }); }
+  renderForms();
+  function valid(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+  function join(){
+    joined = true;
+    try { localStorage.setItem('mm_joined','1'); } catch(e){}
+    renderForms(); renderNotify();
+  }
+  document.addEventListener('submit', function(e){
+    var f = e.target; if (!f.classList.contains('lf')) return;
+    e.preventDefault();
+    var v = f.querySelector('input[type=email]').value.trim();
+    if (!valid(v)) { f.querySelector('.err').textContent = 'Please enter a valid email address.'; return; }
+    join();
+  });
+
+  function tile(p){
+    return '<a class="tile" href="#'+p.id+'"><div class="im">'+
+      '<img src="'+p.img+'" alt="'+esc(p.name+' '+p.type)+' in black" style="object-position:'+p.pos+'">'+
+      (p.hover ? '<img class="h" src="'+p.hover+'" alt="" style="object-position:'+(p.hoverPos||'center')+(p.hoverFit?';object-fit:'+p.hoverFit+';background:#EEE9E6':'')+'">' : '')+
+      '</div><div class="meta"><div><div class="n">'+esc(p.name)+'</div><div class="t">'+esc(p.type)+'</div></div>'+
+      '<div class="p">'+esc(p.price)+'<span class="so">Sold out</span></div></div></a>';
+  }
+  document.querySelectorAll('[data-grid]').forEach(function(g){ g.innerHTML = PRODUCTS.map(tile).join(''); });
+
+  var current = null;
+  function renderNotify(){
+    var n = document.getElementById('notify'); if (!n) return;
+    n.innerHTML = joined
+      ? '<p class="ok">You’re on the list for this piece.</p><p class="fine">We’ll write before Drop 02 opens to everyone else.</p>'
+      : '<span class="caps lbl">Notify me</span><p class="fine" style="margin:0 0 12px">Leave your email and size — we’ll tell you first when it’s back.</p>'+
+        '<form class="lf" novalidate><select aria-label="Your size"><option>XS</option><option>S</option><option selected>M</option><option>L</option><option>XL</option></select>'+
+        '<div class="lform"><input type="email" placeholder="Email address" aria-label="Email address" autocomplete="email"><button type="submit">Notify</button></div><p class="err" aria-live="polite"></p></form>';
+  }
+  function renderProduct(p){
+    current = p;
+    document.getElementById('crumb').textContent = p.name + ' ' + p.type;
+    document.getElementById('pName').textContent = p.name;
+    document.getElementById('pType').textContent = p.type;
+    document.getElementById('pPrice').textContent = p.price;
+    document.getElementById('pDesc').textContent = p.desc;
+    document.getElementById('pFit').textContent = p.fit;
+    document.getElementById('pMat').textContent = p.material || 'Approx. 94% plant-based viscose, 6% elastane. Final composition and test results: [TEST RESULTS].';
+    document.getElementById('pPts').innerHTML = (p.points||[]).map(function(t){return '<li>'+esc(t)+'</li>';}).join('');
+    var g = (p.gallery||[]).map(function(x){
+      if (x[3] === 'video') return '<div class="g"><video src="'+x[0]+'" aria-label="'+esc(x[1])+'" autoplay muted loop playsinline style="object-position:'+x[2]+'"></video></div>';
+      return '<div class="g"'+(x[3]==='contain'?' style="background:#EEE9E6"':'')+'><img src="'+x[0]+'" alt="'+esc(x[1])+'" style="object-position:'+x[2]+(x[3]==='contain'?';object-fit:contain':'')+'"></div>';
+    });
+    if (g.length % 2) g.push('<div class="g"></div>');
+    document.getElementById('gal').innerHTML = g.join('');
+    renderNotify();
+    document.getElementById('more').innerHTML = PRODUCTS.filter(function(x){return x.id!==p.id;}).map(tile).join('');
+  }
+
+  var VIEWS = ['home','shop','mission'];
+  function route(){
+    var h = (location.hash||'#home').slice(1); if (h === 'about') h = 'mission';
+    if (h === 'join') { goJoin(); return; }
+    var p = PRODUCTS.filter(function(x){return x.id===h;})[0];
+    show(p ? 'product' : (VIEWS.indexOf(h) > -1 ? h : 'home'));
+    if (p) { renderProduct(p); document.title = p.name+' '+p.type+' — Movement Matter'; } else document.title = 'Movement Matter';
+    window.scrollTo(0,0);
+  }
+  function show(v){
+    document.querySelectorAll('.view').forEach(function(x){ x.classList.toggle('active', x.id === 'view-'+v); });
+    document.getElementById('mnav').classList.remove('open');
+    document.getElementById('menuBtn').setAttribute('aria-expanded','false');
+  }
+  function goJoin(){
+    var t = document.querySelector('.view.active .join');
+    if (!t) { show('home'); t = document.getElementById('join-home'); }
+    document.getElementById('mnav').classList.remove('open');
+    t.scrollIntoView({behavior:'smooth'});
+  }
+  document.querySelectorAll('[data-join]').forEach(function(a){
+    a.addEventListener('click', function(e){ e.preventDefault(); goJoin(); });
+  });
+  window.addEventListener('hashchange', route);
+  route();
+
+  document.getElementById('menuBtn').addEventListener('click', function(){
+    var open = document.getElementById('mnav').classList.toggle('open');
+    this.setAttribute('aria-expanded', String(open));
+  });
+  document.getElementById('bag').addEventListener('click', function(e){ e.preventDefault(); });
+
+  var modal = document.getElementById('modal');
+  function closeM(){ modal.classList.remove('open'); try { sessionStorage.setItem('mm_pop','1'); } catch(e){} }
+  var seen = false; try { seen = sessionStorage.getItem('mm_pop') === '1'; } catch(e){}
+  if (!seen && !joined) setTimeout(function(){ if (!joined) modal.classList.add('open'); }, 6000);
+  document.getElementById('mClose').addEventListener('click', closeM);
+  document.getElementById('mSkip').addEventListener('click', closeM);
+  modal.addEventListener('click', function(e){ if (e.target === modal) closeM(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeM(); });
+  document.addEventListener('submit', function(){ if (joined && modal.classList.contains('open')) setTimeout(closeM, 1600); });
+})();
+</script>
+</body>
+</html>
