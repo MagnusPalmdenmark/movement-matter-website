@@ -200,6 +200,31 @@ details p{margin:12px 0 0;font-size:13px;color:var(--mute)}
   .films{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 
+/* slider */
+.slider{position:relative;overflow:hidden;background:#141110}
+.track{display:flex;transition:transform .9s cubic-bezier(.65,0,.35,1)}
+.slide{flex:0 0 100%;display:grid;grid-template-columns:1fr 1fr;height:calc(100vh - 110px);min-height:560px;max-height:900px}
+.s-media{position:relative;overflow:hidden;background:#E9E3DC}
+.s-media img,.s-media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.s-txt{display:flex;flex-direction:column;justify-content:center;padding:48px clamp(28px,7vw,120px)}
+.s-txt h2{margin:16px 0 20px;font-size:clamp(38px,5vw,76px);line-height:.98;font-weight:800;text-transform:uppercase}
+.s-txt p{margin:0 0 32px;max-width:400px;font-size:15px;opacity:.85}
+.s-btn{align-self:flex-start;border:1px solid;padding:15px 26px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
+.s-btn:hover{opacity:.7}
+.s-arrow{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border:0;background:rgba(247,243,238,.85);color:#141110;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.s-arrow.prev{left:16px}.s-arrow.next{right:16px}
+.dots{position:absolute;left:0;right:0;bottom:20px;display:flex;justify-content:center;gap:4px}
+.dots button{width:44px;height:24px;border:0;background:none;cursor:pointer;padding:0;position:relative}
+.dots button:after{content:'';position:absolute;left:8px;right:8px;top:11px;height:2px;background:rgba(247,243,238,.5)}
+.dots button.on:after{background:#F7F3EE}
+@media (max-width:900px){
+  .slide{grid-template-columns:1fr;grid-template-rows:auto auto;height:auto;max-height:none;min-height:0}
+  .s-media{aspect-ratio:4/5}
+  .s-txt{padding:36px 24px 56px}
+  .s-arrow{top:40%}
+}
+@media (prefers-reduced-motion:reduce){.track{transition:none}}
+
 @media (max-width:900px){
   .head{grid-template-columns:auto 1fr auto}
   .head nav,.head .r .hm{display:none}
@@ -233,10 +258,40 @@ details p{margin:12px 0 0;font-size:13px;color:var(--mute)}
 <main>
 <!-- HOME -->
 <section class="view" id="view-home">
-  <div class="hero">
-    <a class="ph" href="#no-01"><img src="strap-full.jpg" alt="No. 01 Strap Top and No. 02 Wide-Leg Pant in black" style="object-position:center 30%"></a>
-    <a class="ph" href="#no-02"><img src="pant-stride.jpg" alt="No. 02 Wide-Leg Pant in black, walking" style="object-position:center 40%"></a>
-  </div>
+  <section class="slider" id="slider" aria-roledescription="carousel" aria-label="Movement Matter">
+    <div class="track" id="track">
+      <div class="slide" aria-roledescription="slide" aria-label="1 of 3">
+        <div class="s-media"><img src="hero-fibres.jpg" alt="Natural fibres for real movement — woman in motion in a black top" style="object-position:center 55%"></div>
+        <div class="s-txt" style="background:#550210;color:#F5E5CC">
+          <span class="caps" style="color:#E2B9AE">Movement Matter</span>
+          <h2>Mostly trees.<br>Not oil.</h2>
+          <p>Activewear made from wood-based fibres, designed in Scandinavia.</p>
+          <a class="s-btn" href="#mission" style="border-color:#F5E5CC">Read our mission</a>
+        </div>
+      </div>
+      <div class="slide" aria-roledescription="slide" aria-label="2 of 3">
+        <div class="s-media"><img src="hero-woman.jpg" alt="Grey-haired woman in a black one-piece" style="object-position:center 20%"></div>
+        <div class="s-txt" style="background:#F7F3EE;color:#141110">
+          <span class="caps" style="color:#6F6762">Drop 01 · Black</span>
+          <h2>Every age.<br>Every body.</h2>
+          <p>Pilates at seven, coffee at nine, a long walk after. Nothing to change out of.</p>
+          <a class="s-btn" href="#shop" style="border-color:#141110">Shop Drop 01</a>
+        </div>
+      </div>
+      <div class="slide" aria-roledescription="slide" aria-label="3 of 3">
+        <div class="s-media"><video src="hero-coming.mp4" poster="hero-coming-poster.jpg" muted loop playsinline aria-label="Short film: view of a beach from an open van door"></video></div>
+        <div class="s-txt" style="background:#141110;color:#F7F3EE">
+          <span class="caps" style="color:#A69C95">Drop 02</span>
+          <h2>Are you<br>coming?</h2>
+          <p>Drop 01 sold out before it opened. Join the list and shop the next one first.</p>
+          <a class="s-btn" href="#join" data-join style="border-color:#F7F3EE">Join the list</a>
+        </div>
+      </div>
+    </div>
+    <button class="s-arrow prev" id="sPrev" aria-label="Previous slide"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="s-arrow next" id="sNext" aria-label="Next slide"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+    <div class="dots" id="dots"><button aria-label="Slide 1"></button><button aria-label="Slide 2"></button><button aria-label="Slide 3"></button></div>
+  </section>
   <div class="intro">
     <p class="caps" style="margin:0;color:var(--mute)">Drop 01 · Five pieces in black</p>
     <h1>Sold out.</h1>
@@ -555,6 +610,34 @@ details p{margin:12px 0 0;font-size:13px;color:var(--mute)}
   document.querySelectorAll('[data-join]').forEach(function(a){
     a.addEventListener('click', function(e){ e.preventDefault(); goJoin(); });
   });
+
+  // slider
+  (function(){
+    var track=document.getElementById('track'); if(!track) return;
+    var slides=track.children, dots=document.querySelectorAll('#dots button'), i=0, timer=null;
+    function go(n){
+      i=(n+slides.length)%slides.length;
+      track.style.transform='translateX('+(-100*i)+'%)';
+      dots.forEach(function(d,k){ d.classList.toggle('on',k===i); d.setAttribute('aria-current',k===i?'true':'false'); });
+      Array.prototype.forEach.call(slides,function(sl,k){
+        sl.setAttribute('aria-hidden',k===i?'false':'true');
+        var v=sl.querySelector('video'); if(!v) return;
+        if(k===i){ var p=v.play(); if(p&&p.catch) p.catch(function(){}); } else v.pause();
+      });
+    }
+    function start(){ stop(); timer=setInterval(function(){ go(i+1); }, 6000); }
+    function stop(){ if(timer) clearInterval(timer); timer=null; }
+    document.getElementById('sPrev').addEventListener('click',function(){ go(i-1); start(); });
+    document.getElementById('sNext').addEventListener('click',function(){ go(i+1); start(); });
+    dots.forEach(function(d,k){ d.addEventListener('click',function(){ go(k); start(); }); });
+    var sl=document.getElementById('slider');
+    sl.addEventListener('mouseenter',stop); sl.addEventListener('mouseleave',start);
+    var x0=null;
+    sl.addEventListener('touchstart',function(e){ x0=e.touches[0].clientX; },{passive:true});
+    sl.addEventListener('touchend',function(e){ if(x0===null) return; var dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>40){ go(i+(dx<0?1:-1)); start(); } x0=null; });
+    go(0);
+    if(!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) start();
+  })();
   window.addEventListener('hashchange', route);
   route();
 
